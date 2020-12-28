@@ -1,3 +1,7 @@
+//Ma'am I had to put the speed for the blocks as less than 3.5 because the original speed is coming as 3.26 - 3.27.
+//I also had to put less than 5 for blockTypeC and blockTypeD as somehow it has 4.5 as original speed.
+//Sorry about any problems it might cause.
+
 const Engine = Matter.Engine;
 const World = Matter.World;
 const Bodies = Matter.Bodies;
@@ -6,6 +10,7 @@ const Constraint = Matter.Constraint;
 
 var stand1;
 var polygon,polygonImg;
+var score = 0;
 
 function preload()
 {
@@ -47,6 +52,7 @@ function setup()
   block16 = new blockTypeD(390,155,30,40);
 
   polygon = Bodies.circle(50,200,20);
+  
   World.add(world,polygon);
 
   sling = new Sling(this.polygon,{x:100,y:200});
@@ -56,6 +62,9 @@ function setup()
 
 function draw() {
   background(0);
+  
+
+  text("Score: "+score,700,100);
   
   imageMode(CENTER);
   image(polygonImg,polygon.position.x,polygon.position.y,40,40);
@@ -85,6 +94,25 @@ function draw() {
   block15.display();
   block16.display();
 
+  //scoring
+  block1.score();
+  block2.score();
+  block3.score();
+  block4.score();
+  block5.score();
+  block7.score();
+  block8.score();
+  block9.score();
+  block10.score();
+  block11.score();
+  block12.score();
+  block13.score();
+  block14.score();
+  block15.score();
+  block16.score();
+  
+  getBgImg();
+
   drawSprites();
 }
 
@@ -97,4 +125,30 @@ function mouseReleased()
 {
 	sling.fly();
 }
+
+function keyPressed()
+{
+  if(keyCode === 32)
+  {
+    Matter.Body.setPosition(polygon,{x:polygon.x,y:polygon.y})
+    sling.attach(this.polygon);
+  }
+}
   
+async function getBgImg()
+{
+    var response = await fetch("http://worldtimeapi.org/api/timezone/Asia/Kolkata");
+    var responseJSON = await response.json();
+    var datetime = responseJSON.datetime;
+    var hour = datetime.slice(11,13);
+    console.log(hour);
+
+    if(hour>=06 && hour<=18)
+    {
+      background(255,255,0);
+    }
+    else
+    {
+      background(0,0,255);
+    }
+}
